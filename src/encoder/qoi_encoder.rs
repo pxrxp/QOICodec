@@ -20,6 +20,8 @@ pub fn encode(image_path: &str) -> ImageBuffer {
         normal_handler.handle(&mut qoi_buffer, &pixel, &mut handled);
     }
 
+    run_handler.cleanup(&mut qoi_buffer);
+
     qoi_buffer.end_byte_stream();
     qoi_buffer
 }

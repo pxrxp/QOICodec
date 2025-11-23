@@ -34,4 +34,11 @@ impl RunHandler {
 
         self.prev_pixel = *pixel;
     }
+
+    pub fn cleanup(&mut self, qoi_buffer: &mut ImageBuffer) {
+        if self.run_length != 0 {
+            qoi_buffer.add_run_pixels(self.run_length);
+            self.run_length = 0;
+        }
+    }
 }
