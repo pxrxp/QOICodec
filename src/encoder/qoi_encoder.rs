@@ -7,10 +7,10 @@ pub fn encode(image_path: &str) -> ImageBuffer {
     let image = reader.decode().expect("Couldn't decode provided file.");
 
     let mut qoi_buffer = ImageBuffer::new(&image);
-    let mut normal_handler = NormalHandler::new(image.has_alpha());
     let mut run_handler = RunHandler::new();
     let mut seen_handler = SeenHandler::new();
     let mut diff_handler = DiffHandler::new();
+    let mut normal_handler = NormalHandler::new(image.has_alpha());
 
     for (_, _, pixel) in image.pixels() {
         let mut handled = false;

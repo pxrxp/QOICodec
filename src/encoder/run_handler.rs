@@ -16,10 +16,17 @@ impl RunHandler {
 
     pub fn handle(&mut self, qoi_buffer: &mut ImageBuffer, pixel: &Rgba<u8>, handled: &mut bool) {
         if !*handled {
-            if *pixel == self.prev_pixel && self.run_length + 1 <= 62 {
-                self.run_length += 1;
+            let run_increment = if self.run_length + 1 > 62 { 0 } else { 1 };
+
+            if *pixel == self.prev_pixel {
+                self.run_length += run_increment;
                 *handled = true;
-            } else if *pixel != self.prev_pixel && self.run_length != 0 {
+            }
+
+            let run_length_limit_exceeded = *pixel == self.prev_pixel && run_increment == 0;
+            let pixel_changed = *pixel != self.prev_pixel && self.run_length != 0;
+
+            if run_length_limit_exceeded || pixel_changed {
                 qoi_buffer.add_run_pixels(self.run_length);
                 self.run_length = 0;
             }

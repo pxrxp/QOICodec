@@ -2,10 +2,10 @@ use image::{DynamicImage, GenericImageView};
 
 const QOI_OP_RGB_TAG: u8 = 0b11111110;
 const QOI_OP_RGBA_TAG: u8 = 0b11111111;
-const QOI_OP_INDEX_TAG: u8 = 0b00 << 7;
-const QOI_OP_DIFF_TAG: u8 = 0b01 << 7;
-const QOI_OP_LUMA_TAG: u8 = 0b10 << 7;
-const QOI_OP_RUN_TAG: u8 = 0b11 << 7;
+const QOI_OP_INDEX_TAG: u8 = 0b00 << 6;
+const QOI_OP_DIFF_TAG: u8 = 0b01 << 6;
+const QOI_OP_LUMA_TAG: u8 = 0b10 << 6;
+const QOI_OP_RUN_TAG: u8 = 0b11 << 6;
 
 pub struct ImageBuffer {
     qoi_buffer: Vec<u8>,
@@ -37,7 +37,7 @@ impl ImageBuffer {
 
     pub fn add_run_pixels(&mut self, run: u8) {
         assert!(run >= 1 && run <= 62);
-        self.qoi_buffer.push(QOI_OP_RUN_TAG | run - 1);
+        self.qoi_buffer.push(QOI_OP_RUN_TAG | run.wrapping_sub(1));
     }
 
     pub fn add_seen_pixel(&mut self, index: u8) {
@@ -78,8 +78,8 @@ impl ImageBuffer {
     }
 
     pub fn end_byte_stream(&mut self) {
-        self.qoi_buffer.push(0x01);
         self.qoi_buffer.extend_from_slice(&[0x00; 7]);
+        self.qoi_buffer.push(0x01);
     }
 
     pub fn write(&self, output_path: &str) {
