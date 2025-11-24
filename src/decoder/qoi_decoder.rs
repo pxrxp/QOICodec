@@ -15,22 +15,31 @@ impl QOIHeader {
         I: Iterator<Item = &'a u8>,
     {
         let magic_chunks = chunk(iter, 4);
-        if magic_chunks != b"qoif" {
-            return Err(QOIError::ImageDecodeError);
-        }
+        let width = u32::from_be_bytes(chunk(iter, 4).try_into().map_err(|_| {
+            QOIError::ImageDecodeError(
+                "Invalid QOI Header: 'width' field requires 4 bytes but stream ended".to_owned(),
+            )
+        })?);
+        let height = u32::from_be_bytes(chunk(iter, 4).try_into().map_err(|_| {
+            QOIError::ImageDecodeError(
+                "Invalid QOI Header: 'height' field requires 4 bytes but stream ended".to_owned(),
+            )
+        })?);
+        let channels = *iter.next().ok_or(QOIError::ImageDecodeError(
+            "Invalid QOI Header: 'channels' field requires 1 byte but stream ended".to_owned(),
+        ))?;
+        let colorspace = *iter.next().ok_or(QOIError::ImageDecodeError(
+            "Invalid QOI Header: 'colorspace' field requires 1 byte but stream ended".to_owned(),
+        ))?;
 
-        let width = u32::from_be_bytes(
-            chunk(iter, 4)
-                .try_into()
-                .map_err(|_| QOIError::ImageDecodeError)?,
-        );
-        let height = u32::from_be_bytes(
-            chunk(iter, 4)
-                .try_into()
-                .map_err(|_| QOIError::ImageDecodeError)?,
-        );
-        let channels = *iter.next().ok_or(QOIError::ImageDecodeError)?;
-        let colorspace = *iter.next().ok_or(QOIError::ImageDecodeError)?;
+        if magic_chunks != b"qoif"
+            || (channels != 3 && channels != 4)
+            || (colorspace != 0 && colorspace != 1)
+        {
+            return Err(QOIError::ImageDecodeError(
+                "Invalid QOI Header: 'magic' field does not equal to 'qoif'".to_owned(),
+            ));
+        }
 
         Ok(Self {
             width,

@@ -2,6 +2,6 @@
 pub enum QOIError {
     FileReadError,
     FileWriteError,
-    ImageDecodeError,
-    InvalidArgs,
+    ImageDecodeError(String),
+    InvalidArgs(String),
 }

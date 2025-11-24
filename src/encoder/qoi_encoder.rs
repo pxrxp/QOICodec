@@ -6,7 +6,9 @@ use image::{DynamicImage, GenericImageView, ImageReader, Rgba};
 
 pub fn encode_file(image_path: &str) -> Result<ImageBuffer, QOIError> {
     let reader = ImageReader::open(image_path).map_err(|_| QOIError::FileReadError)?;
-    let image = reader.decode().map_err(|_| QOIError::ImageDecodeError)?;
+    let image = reader
+        .decode()
+        .map_err(|_| QOIError::ImageDecodeError("Couldn't decode the input image".to_owned()))?;
     encode(&image)
 }
 
