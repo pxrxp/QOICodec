@@ -18,12 +18,24 @@ pub fn decode(image_bytes: &Vec<u8>) -> Result<DecodedImage, QOIError> {
     let mut iter = image_bytes.iter();
 
     let magic_chunks = chunk(&mut iter, 4);
-    let width_b = chunk(&mut iter, 4);
-    let height_b = chunk(&mut iter, 4);
+    let width = u32::from_be_bytes(
+        chunk(&mut iter, 4)
+            .try_into()
+            .map_err(|_| QOIError::ImageDecodeError)?,
+    );
+    let height = u32::from_be_bytes(
+        chunk(&mut iter, 4)
+            .try_into()
+            .map_err(|_| QOIError::ImageDecodeError)?,
+    );
     let channels = iter.next().unwrap();
     let colorspace = iter.next().unwrap();
 
     assert_eq!(magic_chunks, b"qoif");
+    println!("Width: {width}");
+    println!("Height: {height}");
+    println!("Channels: {channels}");
+    println!("Colorspace: {colorspace}");
 
     Ok(DecodedImage {
         image: None,
