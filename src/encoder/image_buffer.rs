@@ -1,5 +1,7 @@
 use image::{DynamicImage, GenericImageView};
 
+use crate::errors::QOIError;
+
 const QOI_OP_RGB_TAG: u8 = 0b11111110;
 const QOI_OP_RGBA_TAG: u8 = 0b11111111;
 const QOI_OP_INDEX_TAG: u8 = 0b00 << 6;
@@ -82,7 +84,8 @@ impl ImageBuffer {
         self.qoi_buffer.push(0x01);
     }
 
-    pub fn write(&self, output_path: &str) {
-        std::fs::write(output_path, &self.qoi_buffer).expect("Couldn't output to the file.");
+    pub fn write(&self, output_path: &str) -> Result<(), QOIError> {
+        std::fs::write(output_path, &self.qoi_buffer).map_err(|_| QOIError::FileWriteError);
+        Ok(())
     }
 }

@@ -1,14 +1,16 @@
+use crate::errors::QOIError;
+
 use super::{DiffHandler, ImageBuffer, NormalHandler, RunHandler, SeenHandler};
 
 use image::{DynamicImage, GenericImageView, ImageReader};
 
-pub fn encode_file(image_path: &str) -> ImageBuffer {
-    let reader = ImageReader::open(image_path).expect("Couldn't open file.");
-    let image = reader.decode().expect("Couldn't decode provided file.");
+pub fn encode_file(image_path: &str) -> Result<ImageBuffer, QOIError> {
+    let reader = ImageReader::open(image_path).map_err(|_| QOIError::FileReadError)?;
+    let image = reader.decode().map_err(|_| QOIError::ImageDecodeError)?;
     encode(&image)
 }
 
-pub fn encode(image: &DynamicImage) -> ImageBuffer {
+pub fn encode(image: &DynamicImage) -> Result<ImageBuffer, QOIError> {
     let mut qoi_buffer = ImageBuffer::new(&image);
     let mut run_handler = RunHandler::new();
     let mut seen_handler = SeenHandler::new();
@@ -24,7 +26,7 @@ pub fn encode(image: &DynamicImage) -> ImageBuffer {
     }
 
     run_handler.cleanup(&mut qoi_buffer);
-
     qoi_buffer.end_byte_stream();
-    qoi_buffer
+
+    Ok(qoi_buffer)
 }
