@@ -35,9 +35,6 @@ fn main() -> Result<(), crate::errors::QOIError> {
             let input = input_image_path(&args)?;
             let output = output_image_path(&args)?;
             decoder::decode_file(&input)?
-                .ok_or(QOIError::ImageDecodeError(
-                    "QOI Header verified, Image invalid".to_owned(),
-                ))?
                 .save(output)
                 .map_err(|_| QOIError::FileWriteError)?
         }
