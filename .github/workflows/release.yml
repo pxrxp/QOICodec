@@ -44,3 +44,6 @@ jobs:
       - uses: softprops/action-gh-release@v1
         with:
           files: ${{ env.BIN_NAME }}-${{ matrix.target }}${{ matrix.suffix }}
+          tag_name: ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
