@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 env:
-  BIN_NAME: qoi_codec
+  BIN_NAME: qoi-codec
 
 jobs:
   build:
