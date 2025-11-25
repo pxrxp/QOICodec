@@ -14,11 +14,12 @@
 - [📥 Installation](#-installation)
 - [🚀 Usage](#-usage)
 - [🏗 Architecture](#-architecture)
-  - [Encoder Loop](#encoder-loop)
-  - [Decoder Loop](#decoder-loop)
-  - [File Tree](#file-tree)
+  - [🔄 Encoder Loop](#-encoder-loop)
+  - [🔄 Decoder Loop](#-decoder-loop)
+  - [📁 File Tree](#-file-tree)
   - [🧩 Structs & Enums](#-structs--enums)
 - [🔗 Dependencies](#-dependencies)
+- [🔗 References](#-references)
 - [📄 License](#-license)
 
 ---
@@ -88,7 +89,8 @@ The CLI automatically infers the desired output format based on the file extensi
 
 Unlike monolithic implementations, `qoi-codec` is architected to separate the state machine from the chunk processing logic. This makes the codebase easier to audit and maintain.
 
-### Encoder Loop
+### 🔄 Encoder Loop
+
 ```mermaid
 flowchart TD
     classDef invisible fill:none,stroke:none,color:none;
@@ -115,7 +117,8 @@ flowchart TD
     Update --> Loop
 ```
 
-### Decoder Loop
+### 🔄 Decoder Loop
+
 ```mermaid
 flowchart TD
     classDef invisible fill:none,stroke:none,color:none;
@@ -138,7 +141,8 @@ flowchart TD
     Update --> Loop
 ```
 
-### File Tree
+### 📁 File Tree
+
 ```text
 .
 ├── main.rs                 # CLI Entry point
@@ -213,6 +217,12 @@ enum QOIError {
 
 ## 🔗 Dependencies
 * `image` [crate](https://crates.io/crates/image): For decoding standard formats into raw pixel data.
+
+---
+
+## 🔗 References
+* [QOI File Format Specification](https://qoiformat.org/qoi-specification.pdf)
+* [Lossless Image Compression in O(n) Time](https://phoboslab.org/log/2021/11/qoi-fast-lossless-image-compression)
 
 ---
 
