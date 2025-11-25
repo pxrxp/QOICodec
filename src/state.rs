@@ -26,6 +26,13 @@ impl QOIState {
         self.seen_pixels[Self::hash(pixel) as usize] == *pixel
     }
 
+    pub fn get_pixel(&self, index: usize) -> image::Rgba<u8> {
+        self.seen_pixels
+            .get(index)
+            .copied()
+            .unwrap_or(image::Rgba([0, 0, 0, 0]))
+    }
+
     pub fn update(&mut self, pixel: &image::Rgba<u8>) {
         self.prev_pixel = *pixel;
         self.add_pixel(pixel);

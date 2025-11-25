@@ -1,10 +1,10 @@
 use crate::{decoder::chunks::chunk, errors::QOIError};
 
 pub struct QOIHeader {
-    width: u32,
-    height: u32,
-    channels: u8,
-    colorspace: u8,
+    pub width: u32,
+    pub height: u32,
+    pub channels: u8,
+    pub colorspace: u8,
 }
 
 impl QOIHeader {

@@ -5,4 +5,5 @@ pub enum QOIError {
     FileWriteError,
     ImageDecodeError(String),
     InvalidArgs(String),
+    ImageTooLarge,
 }
